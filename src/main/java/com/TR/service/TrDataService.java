@@ -430,5 +430,42 @@ public List<IssueTypeModel> getItemStatusForAssignee(String project, String spri
 		return model;
 	}
 	
+	//getBugCompletionPercentage : use to get the bug completion range for 100 hours
+	
+	public DefectsDataModel getBugCompletionPercentage(String sprint ){
+		ArrayList<DefectsDataModel> issuelist = new ArrayList<DefectsDataModel>();
+		List<Object[]> dataList = jiraRepo.getBugCompletionPercentage(sprint);
+		DefectsDataModel model = new DefectsDataModel();
+		int counter =0;
+		String project = null;
+		int   totaltimespent = 0;
+		
+		for(Object[] obj: dataList) {
+			
+			 project = (String) obj[0];
+			
+			 int   timespent  =   Integer.parseInt((String) obj[2])  ;
+			 
+			 totaltimespent = totaltimespent + timespent ;
+			 
+			 counter++;
+			
+			System.out.print("totaltimespent "+ totaltimespent + "timespent :" + timespent);
+		//	issuelist.add(model);
+		}
+		//no of bugs * 100 / totalhourspent = bugs fixed for 100 hours.
+		if(totaltimespent > 0) {
+			
+		 int bugcompletionpercentage =(int)((counter*100)/totaltimespent);
+		 System.out.print("counter "+ counter + "bugcompletionpercentage :" + bugcompletionpercentage);
+			
+		model.setProject(project);
+		model.setSprint(sprint);
+		model.setBugCompletionRange(bugcompletionpercentage);
+		
+		}
+		
+		return model;
+	}
 	
 }

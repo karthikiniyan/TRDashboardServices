@@ -68,6 +68,9 @@ public interface JiraItemRepository extends CrudRepository<DataModel, String> {
 	@Query(value="select d.project, count(d.issueid) as TotalCount, count(d.status) filter (where d.status='Closed') as statuscount from trdata.jira_item d where d.sprint=:sprint group by project",nativeQuery = true)
 	List<Object[]> getCompletionPercentage(String sprint);
 	
+	@Query(value="select d.project,d.sprint,d.timespent  from trdata.jira_item d where d.issuetype='Bug' and d.sprint=:sprint",nativeQuery = true)
+	List<Object[]> getBugCompletionPercentage(String sprint);
+	
 	@Query(value="select project,sprint,sprintenddate,status,count(project) from trdata.jira_item where sprintenddate < now() and status != 'Closed' group by project,sprint,sprintenddate,status",nativeQuery = true)
 	List<Object[]> getPastEndDateItems();
 	

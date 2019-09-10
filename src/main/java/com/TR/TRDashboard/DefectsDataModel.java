@@ -8,7 +8,11 @@ public class DefectsDataModel {
 	private String sprint;
 	private String columnName;
 	private Timestamp sprintenddate;
+	private int bugCompletionRange;
 	
+	
+
+
 	public boolean flag;
 	
 	public boolean isFlag() {
@@ -140,6 +144,13 @@ public class DefectsDataModel {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	
+	public int getBugCompletionRange() {
+		return bugCompletionRange;
+	}
+	public void setBugCompletionRange(int bugCompletionRange) {
+		this.bugCompletionRange = bugCompletionRange;
 	}
 
 }

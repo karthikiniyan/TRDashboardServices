@@ -117,17 +117,28 @@ public class TRController {
 	public List<DefectsDataModel> getCompletionPercentage() {
 		
 	ArrayList<DefectsDataModel> modellist = new ArrayList<DefectsDataModel>();	
-		
 	List<String> sprintlist =	dataService.getActiveSprint();
 	
 	for(String sprint : sprintlist ) {
 
 	DefectsDataModel data= dataService.getCompletionPercentage(sprint);
-	
 	modellist.add(data);
-	
+	}
+	return modellist;
 	}
 	
+	//getBugCompletionPercentage
+	@GetMapping("/jira/getBugCompletionPercentage")
+	public List<DefectsDataModel> getBugCompletionPercentage() {
+		
+	ArrayList<DefectsDataModel> modellist = new ArrayList<DefectsDataModel>();	
+	List<String> sprintlist =	dataService.getActiveSprint();
+	
+	for(String sprint : sprintlist ) {
+
+	DefectsDataModel data= dataService.getBugCompletionPercentage(sprint);
+	modellist.add(data);
+	}
 	return modellist;
 	}
 	
