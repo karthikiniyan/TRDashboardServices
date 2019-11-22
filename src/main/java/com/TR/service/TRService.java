@@ -1,6 +1,7 @@
 package com.TR.service;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -17,7 +18,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.TR.TRDashboard.AssetMasterRepository;
 import com.TR.TRDashboard.DataModel;
+import com.TR.model.AssetMasterModel;
 
 @Service
 public class TRService {
@@ -26,12 +29,15 @@ public class TRService {
 	@Autowired
 	private RestTemplate restTemplate;
 	
+	@Autowired
+	private AssetMasterRepository assetRepo;
+	
 	
 	public String getDashBoardData() {
 		
 		
-	final String uri = "http://ent.jira.int.thomsonreuters.com/rest/api/2/search?jql=project in (IAM,ASSETINS,APIG,DVPRT,IAPI,WCA,CTCP,CTPT) and sprint in openSprints()&maxResults=-1&fields=project,issuekey,issuetype,priority,reporter,assignee,resolution,labels,status,created,timeestimate,timespent,timeoriginalestimate,customfield_23700,customfield_10102,customfield_13500,customfield_11500,created,updated,duedate";
-				 
+	final String uri = "http://ent.jira.int.thomsonreuters.com/rest/api/2/search?jql=project in (IAM,ASSETINS,APIG,DVPRT,IAPI,WCA,CTCP,CTPT,CTCPBU,SOPLATM,PAXVII,CTDCS,MAFQABANG,GCMSQABANG,CONVENE,ISF,PLATSRCHES,ECPCDAP,ACORN,MDAAS,DSDEV,EANXVII,CEMMPXVII,CFA,OAEXVII,CEMCS) and sprint in openSprints()&maxResults=-1&fields=project,issuekey,issuetype,priority,reporter,assignee,resolution,labels,status,created,timeestimate,timespent,timeoriginalestimate,customfield_23700,customfield_10102,customfield_13500,customfield_11500,created,updated,duedate";
+	//final String uri = "http://ent.jira.int.thomsonreuters.com/rest/api/2/search?jql=project in (MDAAS,DSDEV,EANXVII,CEMMPXVII,CFA,OAEXVII,CEMCS) and sprint in openSprints()&maxResults=-1&fields=project,issuekey,issuetype,priority,reporter,assignee,resolution,labels,status,created,timeestimate,timespent,timeoriginalestimate,customfield_23700,customfield_10102,customfield_13500,customfield_11500,created,updated,duedate";			 
 				     //"http://ent.jira.int.thomsonreuters.com/rest/api/2/search?jql=project=IAM and sprint in openSprints()&fields=project,issuekey,issuetype,priority,reporter,assignee,resolution,labels,status,created,timeestimate,timespent,timeoriginalestimate,customfield_23700,customfield_10102,customfield_13500,customfield_11500,created,updated,duedate";
 	     
 		 
@@ -60,6 +66,22 @@ public class TRService {
 		return name;
 		
 	}
+	
+	public  String getSprintStatus(String details) {
+		
+		String status = null ;	
+	    String[] words = details.split(",");
+	        
+	        for(String  s  : words) {
+	         System.out.println(s);
+	         if(s.startsWith("state"))
+	        	 status= s.substring(6);
+	         
+	        }
+	        System.out.println(status);
+			return status;
+			
+		}
 	
 	public  String getSprintStartDate(String details) {
 		
@@ -122,6 +144,8 @@ public  String getSprintEndDate(String details) {
 		JSONParser parser = new JSONParser();
 		
 		ArrayList<DataModel> dataList = new ArrayList<DataModel>();
+		
+		HashMap<String,String> assetMasterMap = getParentAsset();
 	    
 	    JSONObject jobj;
 		try {
@@ -146,10 +170,22 @@ public  String getSprintEndDate(String details) {
 			Object obj = obj1.get("fields");
 			
 			JSONObject jobj1 = (JSONObject)parser.parse(obj.toString());
+			//jobj1.get("timeestimate")==null?0:(int)
 			
-			String timeestimate = (String) String.valueOf( jobj1.get("timeestimate"));
+			String strtimespent =   String.valueOf(jobj1.get("timespent")==null?0:jobj1.get("timespent"));
 			
-			String timespent = (String)  String.valueOf(jobj1.get("timespent"));
+			int timespent = Integer.parseInt(strtimespent);
+			
+			String strtimeestimate =   String.valueOf(jobj1.get("timeestimate")==null?0:jobj1.get("timeestimate"));
+			
+			int timeestimate = Integer.parseInt(strtimeestimate);
+			
+		//	long timespent =  (long)  (jobj1.get("timespent")==null?0:jobj1.get("timespent"));
+			
+			System.out.println("timeestimate " +timeestimate +" timespent"+ timespent);
+			//jobj1.get("timeestimate")==null?0:(int)
+			
+			//int timespent = (int)  String.valueOf(jobj1.get("timespent")==null?0:jobj1.get("timespent"));
 			
 			String Bussinessunit = (String)jobj1.get("customfield_23700");
 			
@@ -225,9 +261,13 @@ public  String getSprintEndDate(String details) {
 			
 			String sprintname  =  getSprintName(sprintdetails);
 			
+			String sprintstatus = getSprintStatus(sprintdetails);
+			
 			if(size == i1) {
 				
 				data.setSprint(sprintname);
+				
+				data.setSprintstatus(sprintstatus);
 				
 				String SprintStartDate = getSprintStartDate(sprintdetails);
 				String SprintEndDate = getSprintEndDate(sprintdetails);
@@ -246,7 +286,7 @@ public  String getSprintEndDate(String details) {
 			}
 			sprinthistory = sprintname +","+  sprinthistory;
 			
-			System.out.println(sprintname   +"  "+ sprinthistory);
+			System.out.println(sprintname   +"  "+ sprinthistory +" "+ sprintstatus);
 			}
 				data.setSprinthistory(sprinthistory);
 				
@@ -273,6 +313,12 @@ public  String getSprintEndDate(String details) {
 			String Project = (String) jobj3.get("key");
 			
 			data.setProject(Project);
+			
+			String assetParent = assetMasterMap.get(Project);
+			
+			data.setParentAsset(assetParent);
+			
+			System.out.print("AssetParent  "+assetParent);
 			
 			//issuetype
 			Object obj3 = jobj1.get("issuetype");
@@ -348,6 +394,24 @@ public  String getSprintEndDate(String details) {
 		
 		return dataList;
 		
+	}
+	
+	public HashMap<String,String> getParentAsset(){
+		Iterable<AssetMasterModel> assetList = assetRepo.findAll();
+		
+		HashMap<String,String> hm = new HashMap<String,String>(); 
+		
+		for(AssetMasterModel model : assetList) {
+			
+			String key = model.getChildAsset();
+			
+		String value =	model.getParentAsset();
+		
+	hm.put(key, value);
+			
+		}
+		
+		return hm;
 	}
 	
 

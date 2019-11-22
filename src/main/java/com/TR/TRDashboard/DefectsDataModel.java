@@ -2,46 +2,19 @@ package com.TR.TRDashboard;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Column;
+
 public class DefectsDataModel {
 	
-	private String project;
+	private String project = null;
 	private String sprint;
+	private String activeSprint;
 	private String columnName;
 	private Timestamp sprintenddate;
+	private Timestamp sprintstartdate;
 	private int bugCompletionRange;
-	
-	
-
-
-	public boolean flag;
-	
-	public boolean isFlag() {
-		return flag;
-	}
-	public void setFlag(boolean flag) {
-		this.flag = flag;
-	}
-	public DefectsDataModel() {
-		
-	}
-	
-	public DefectsDataModel(String status, String issuetype, String priority, String assignee, String label,
-			Timestamp created, Timestamp duedate, String issueId, boolean flag ,String project,String sprint) {
-		super();
-		this.status = status;
-		this.issuetype = issuetype;
-		this.priority = priority;
-		this.assignee = assignee;
-		this.label = label;
-		this.created = created;
-		this.duedate = duedate;
-		this.issueId = issueId;
-		this.flag=flag;
-		this.project=project;
-		this.sprint=sprint;
-	}
-
-
+	private int noofBugs;
+	private boolean sprintOverRunFlag;
 	private String status;
 	private String issuetype;
 	private String priority;
@@ -50,6 +23,109 @@ public class DefectsDataModel {
 	private Timestamp created ;
 	private Timestamp duedate ;
 	private String issueId = null;
+	private long sprintoverRunDays;
+	private int Count =0;
+	private int completionpercentage = 0;
+	public boolean flag;
+	
+	private long timeestimate = 0;
+	private long timespent = 0;
+	private String effortStatus = null;
+	private String qualityStatus = null;
+	
+	
+	private String sprintstatus = "Green";
+	
+	private int totalitems = 0;
+	
+
+
+	
+
+	
+
+	public DefectsDataModel() {
+		
+	}
+	
+    public DefectsDataModel(String status, String issuetype, String priority, String assignee, String label,
+            Timestamp created, Timestamp duedate, String issueId, boolean flag ,String project,String sprint,boolean sprintOverRunFlag,Timestamp Sprintstartdate ,Timestamp sprintenddate) {
+     super();
+     this.status = status;
+     this.issuetype = issuetype;
+     this.priority = priority;
+     this.assignee = assignee;
+     this.label = label;
+     this.created = created;
+     this.duedate = duedate;
+     this.issueId = issueId;
+     this.flag=flag;
+     this.project=project;
+     this.sprint=sprint;
+     this.sprintOverRunFlag=sprintOverRunFlag;
+     this.sprintenddate = sprintenddate;
+     this.sprintstartdate = Sprintstartdate;
+}
+    public String getQualityStatus() {
+		return qualityStatus;
+	}
+
+	public void setQualityStatus(String qualityStatus) {
+		this.qualityStatus = qualityStatus;
+	}
+    public int getTotalitems() {
+		return totalitems;
+	}
+
+	public void setTotalitems(int totalitems) {
+		this.totalitems = totalitems;
+	}
+    
+    public String getSprintstatus() {
+		return sprintstatus;
+	}
+
+	public void setSprintstatus(String sprintstatus) {
+		this.sprintstatus = sprintstatus;
+	}
+    
+	public String getEffortStatus() {
+		return effortStatus;
+	}
+
+	public void setEffortStatus(String effortStatus) {
+		this.effortStatus = effortStatus;
+	}
+    
+	public long getTimeestimate() {
+		return timeestimate;
+	}
+
+	public void setTimeestimate(long timeestimate) {
+		this.timeestimate = timeestimate;
+	}
+
+	public long getTimespent() {
+		return timespent;
+	}
+
+	public void setTimespent(long timespent) {
+		this.timespent = timespent;
+	}
+
+    public boolean isFlag() {
+		return flag;
+	}
+	public void setFlag(boolean flag) {
+		this.flag = flag;
+	}
+
+    public Timestamp getSprintstartdate() {
+		return sprintstartdate;
+	}
+	public void setSprintstartdate(Timestamp sprintstartdate) {
+		this.sprintstartdate = sprintstartdate;
+	}
 	
 	public String getIssueId() {
 		return issueId;
@@ -83,8 +159,6 @@ public class DefectsDataModel {
 	}
 
 	
-	private int Count =0;
-	private int completionpercentage = 0;
 	
 	public int getCompletionpercentage() {
 		return completionpercentage;
@@ -152,5 +226,34 @@ public class DefectsDataModel {
 	public void setBugCompletionRange(int bugCompletionRange) {
 		this.bugCompletionRange = bugCompletionRange;
 	}
+	
+	public int getNoofBugs() {
+		return noofBugs;
+	}
+	public void setNoofBugs(int noofBugs) {
+		this.noofBugs = noofBugs;
+	}
+	public boolean isSprintOverRunFlag() {
+		return sprintOverRunFlag;
+	}
+	public void setSprintOverRunFlag(boolean sprintOverRunFlag) {
+		this.sprintOverRunFlag = sprintOverRunFlag;
+	}
+	public long getSprintoverRunDays() {
+		return sprintoverRunDays;
+	}
+	public void setSprintoverRunDays(long sprintoverRunDays) {
+		this.sprintoverRunDays = sprintoverRunDays;
+	}
+	
+	public String getActiveSprint() {
+		return activeSprint;
+	}
+	public void setActiveSprint(String activeSprint) {
+		this.activeSprint = activeSprint;
+	}
+
+
+
 
 }
