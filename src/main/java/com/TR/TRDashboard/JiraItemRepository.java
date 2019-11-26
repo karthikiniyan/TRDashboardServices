@@ -61,7 +61,7 @@ public interface JiraItemRepository extends CrudRepository<DataModel, String> {
 	
 	//query to find active sprint
 	
-	@Query(value="select distinct d.sprint,d.project from DataModel d where d.ParentAsset=:parent and d.sprintstatus='ACTIVE' order by d.project")
+	@Query(value="select distinct d.sprint,d.project from DataModel d where d.ParentAsset=:parent and d.sprintstatus='ACTIVE' ")
 	List<Object[]> getActiveSprint(String parent);
 	
 	@Query(value="select sum(timeestimate) totaltimeestimate,sum(timespent) totaltimespent,project,sprint from trdata.jira_item ji where (project,sprint) in (select project,sprint from trdata.jira_item where sprintstatus='ACTIVE')\r\n" + 
