@@ -1,14 +1,13 @@
 package com.TR.service;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.TR.TRDashboard.ActionItemRepository;
-import com.TR.TRDashboard.Audit;
 import com.TR.model.ActionItem;
 import com.TR.model.ActionItemDetails;
 
@@ -22,6 +21,11 @@ public class ActionItemImplService implements IActionItemService {
 	public ActionItem save(ActionItem item) {
 		// new Audit("jey", "jey", new Timestamp(System.currentTimeMillis()), new
 		// Timestamp(System.currentTimeMillis()));
+		if(item.getLogHistory()==null) {
+			item.setLogHistory(item.getWorkLog());
+		}else {
+			item.setLogHistory(item.getLogHistory()+" \n ( "+new Date()+" ) ==>"+item.getWorkLog());
+		}
 		actionItemRepository.save(item);
 		System.out.println("hjh" + item);
 		return item;
